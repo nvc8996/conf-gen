@@ -1,0 +1,14 @@
+# /etc/strongswan.conf - strongSwan configuration file
+charon {
+        load_modular = yes
+        plugins {
+                include strongswan.d/charon/*.conf
+        }
+}
+swanctl {
+  load = pem pkcs1 x509 revocation 
+}
+
+charon-systemd {
+  load = systime-fix random nonce revocation vici kernel-netlink socket-default
+}

@@ -1,0 +1,84 @@
+connections {
+BEGIN_LOOP
+   $CONX {
+      local_addrs  = $MY_IP_WAN
+      remote_addrs = $PEER_IP_WAN_1
+      Proposals = abc
+      Dpd_delay = 10s
+      Dpd_timeout = 60s
+      Rekey_time = 25920s
+      Reauth_time = 0s
+      Over_time = 2880s
+      Rand_time =2880s
+      Encap = no
+      Mobike = no // tạo option tick
+      local {
+         auth = pubkey
+         certs = $MY_PUB_KEY
+         id = "$MY_CERT_ID"
+      }
+      remote {
+         id = $PEER_CERT_ID_1
+         auth = pubkey
+      }
+      children {
+         $CON_X {
+            local_ts  = $MY_NET_1, $MY_NET_2,.. 
+            remote_ts = $PEER_NET_1_1, $PEER_NET_1_2
+            dpd_delay=30s
+            dpd_timeout=3600
+            keyingtries=0
+            rekey_time = 3600
+            lifetime = 8h
+            dpd_action=start
+            ipcomp=yes
+            esp_proposals = abcd
+         }
+      }
+
+      version = 2
+      mobike = n
+      reauth_time = 10800
+      proposals = abcd
+   }
+}
+END_LOOP
+
+Loop tiếp:
+$CON2{
+      local_addrs  = $MY_IP_WAN
+      remote_addrs = $PEER_IP_WAN_2
+      Proposals = abc
+      Dpd_delay = 10s
+      Dpd_timeout = 60s
+      Rekey_time = 25920s
+      Reauth_time = 0s
+      Over_time = 2880s
+      Rand_time =2880s
+      Encap = no
+      Mobike = no
+      local {
+         auth = pubkey
+         certs { 
+                     file = $MY_CERT_FILE
+          }
+         id = "$MY _CERT_ID"
+      }
+      remote {
+         id = $PEER_CERT_ID_2
+         auth = pubkey
+      }
+      children {
+         $CON_2 {
+            local_ts  = $MY_NET_1, $MY_NET_2,.. 
+            remote_ts = $PEER_NET_2_1, $PEER_NET_2_2
+            dpd_delay=30s
+            dpd_timeout=3600
+            keyingtries=0
+            rekey_time = 3600
+            lifetime = 8h
+            dpd_action=start
+            ipcomp=yes
+            esp_proposals = abcd
+         }
+      }

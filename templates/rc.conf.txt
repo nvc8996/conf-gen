@@ -1,0 +1,23 @@
+#####   ql #####
+
+hostname="ql"
+gateway_enable="YES"
+defaultrouter="${MY_GW}$"
+
+ifconfig_${NIC1}$="inet ${MY_IPWAN}$ netmask ${WAN_NETMASK}$"
+ifconfig_${NIC2}$="inet ${MY_IPLAN}$ netmask ${LAN_NETMASK}$"
+
+
+#########    FIREWALL Config   #########
+firewall_enable="YES"
+firewall_script="/etc/ipfw.rules"
+#firewall_logging="YES"
+#firewall_logif="YES"
+
+#########    IPSEC Config   #########
+strongswan_enable="YES"
+
+#########    OTHER Config   #########
+sshd_enable="YES"
+
+#ntpd_enable="YES"

@@ -1,0 +1,29 @@
+#####   IP FIREWALL RULES #####
+IPF="ipfw -q add"
+ipfw -q -f flush
+
+### Define
+MY_IPWAN="${MY_IPWAN}$";
+MY_IPLAN="${MY_IPLAN}$";
+MY_NET_1="${MY_NET_1}$";
+
+### loopback
+$IPF 10 allow all from any to any via lo0
+$IPF 20 deny all from any to 127.0.0.0/8
+$IPF 30 deny all from 127.0.0.0/8 to any
+$IPF 40 deny tcp from any to any frag
+
+### statefull
+$IPF 50 check-state
+#$IPF 50 allow tcp from any to any established
+#$IPF 60 allow all from any to any out keep-state
+#$IPF 70 allow icmp from any to any
+
+### Permit LAN on tunnels
+$IPF 60 allow ip from $MY_IPWAN  to any
+$IPF 70 allow ip from any to $MY_IPWAN
+$IPF 80 deny ip from any to any
+
+### Log any
+$IPF 90 allow log all from any to any in
+$IPF 100 allow log all from any to any out

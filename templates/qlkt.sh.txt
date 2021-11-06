@@ -1,0 +1,10 @@
+#####   TB Bao mat #####
+date ${MY_NTP}$ // vi du202108200000.00 
+echo "########  SET IP ###########"
+sh /usr/local/etc/ipfw.rules 
+echo "########  RUN IPSEC ###########"
+sleep 1 
+/usr/local/etc/rc.d/strongswan start
+/usr/bin/swanctl –initiate --child ${CON_X}$
+echo ".........."
+echo "............................................ "

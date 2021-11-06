@@ -1,0 +1,25 @@
+chmod 600 *.conf
+chmod 755 *.sh
+echo "########  unzip strongswan.tar OK ###########"
+tar -xvf strongswan.tar -C /usr/local/etc/
+####copy certificates
+rm /usr/local/etc/swanctl/*
+cp cert/* /usr/local/etc/swanctl/
+#### copy
+
+echo "########  Copy qlkt.sh OK ###########"
+cp qlkt.sh /usr/local/etc/qlkt.sh
+echo "########  Copy strongswan config OK ###########"
+cp swanctl.conf /usr/local/etc/swanctl/
+echo "########  Copy rc.conf & ipfw.rules OK ###########"
+cp ipfw.rules /usr/local/etc/
+cp ipfw.rules /etc/
+cp rc.conf /etc/
+###cai nay co hoac khong
+##cp strongswan.conf /usr/local/etc/
+##cp strongswan.conf /usr/local/etc/
+echo ". . ."
+echo ". . . . . . ."
+echo ". . . . . . . . . . ."
+echo "Reboot device and check ..."
+echo ""
