@@ -8,7 +8,7 @@ OUT_DIR = "./configs"
 def place(data, line):
     vars = re.findall(VAR_PATTERN, line)
     for var in vars:
-        line = line.replace(var, data[Variable(var).name])
+        line = line.replace(var, data[Variable(var).name].value)
     return line
 
 class Variable:
@@ -31,18 +31,25 @@ class Variable:
         return hash(self.name+self.type+self.desc)
 
 class LoopPart:
-    def __init__(self, lines):
+    def __init__(self, lines, filename):
         self.lines = lines
-        self.vars = set()
+        self.filename = filename
+        self.vars = []
         self.get_vars()
         self.params = []
 
-    def add_params(self, data):
+    def put_params(self, data):
         self.params.append(data)
+    
+    def pop_params(self):
+        self.params = self.params[:-1]
     
     def get_vars(self):
         for line in self.lines:
-            self.vars |= set([Variable(x) for x in re.findall(VAR_PATTERN, line)])
+            for x in re.findall(VAR_PATTERN, line):
+                tmp = Variable(x)
+                if tmp not in self.vars:
+                    self.vars.append(tmp)
 
     def generate_one(self, data):
         return [place(data, line) for line in self.lines]
@@ -58,10 +65,11 @@ class TemplateEngine:
         self.controller = controller
         self.name = filename[:-4]
         self.temp_dir = temp_dir
-        self.vars = set()
-        self.loops = []
+        self.vars = []
         self.lines = []
         self.structure = []
+        self.loops = []
+        self.loop_count = 0
         self.result = []
         self.enabled = True
 
@@ -87,17 +95,24 @@ class TemplateEngine:
             if line.strip() == 'BEGIN_LOOP':
                 in_loop = True
                 loop_content = []
+                continue
             
             if line.strip() == 'END_LOOP':
                 in_loop = False
-                self.structure.append(LoopPart(loop_content))
+                self.structure.append(LoopPart(loop_content, self.name))
+                self.loops.append(self.structure[-1])
+                self.loop_count += 1
                 loop_content = []
+                continue
 
             if in_loop:
                 loop_content.append(line)
             else:
                 self.structure.append(line)
-                self.vars |= set([Variable(x) for x in re.findall(VAR_PATTERN, line)])
+                for x in re.findall(VAR_PATTERN, line):
+                    tmp = Variable(x)
+                    if tmp not in self.vars:
+                        self.vars.append(tmp)
     
     def generate(self, data):
         self.result = []
@@ -107,7 +122,11 @@ class TemplateEngine:
             else:
                 self.result += line.export()
     
-    def export(self, data, out_dir=OUT_DIR):
+    def export(self, out_dir=OUT_DIR):
+        if not self.enabled:
+            return
+        
+        data = self.controller.data
         self.generate(data)
 
         # Create output directory if does not exist

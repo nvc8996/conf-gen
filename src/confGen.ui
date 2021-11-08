@@ -51,7 +51,7 @@
       <x>12</x>
       <y>42</y>
       <width>211</width>
-      <height>501</height>
+      <height>511</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -69,7 +69,7 @@
        <x>0</x>
        <y>0</y>
        <width>209</width>
-       <height>499</height>
+       <height>509</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout"/>
@@ -81,7 +81,7 @@
       <x>240</x>
       <y>40</y>
       <width>471</width>
-      <height>501</height>
+      <height>511</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -99,7 +99,7 @@
        <x>0</x>
        <y>0</y>
        <width>469</width>
-       <height>499</height>
+       <height>509</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2"/>
@@ -234,6 +234,8 @@
      <string>File</string>
     </property>
     <addaction name="actionReset"/>
+    <addaction name="actionSelect"/>
+    <addaction name="actionUnselect"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -266,6 +268,16 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionUnselect">
+   <property name="text">
+    <string>Unselect all</string>
+   </property>
+  </action>
+  <action name="actionSelect">
+   <property name="text">
+    <string>Select all</string>
    </property>
   </action>
  </widget>

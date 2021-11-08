@@ -1,0 +1,6 @@
+BEGIN_LOOP
+{
+    ${NVC;STR;Chuyen secret}$
+    ${HULA;STR;Lanh secret}$
+}
+END_LOOP
