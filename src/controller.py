@@ -1,7 +1,7 @@
 import os
 from PyQt5.QtCore import Qt
 
-from PyQt5.QtWidgets import QCheckBox, QHBoxLayout, QLabel, QLineEdit, QMessageBox, QWidget
+from PyQt5.QtWidgets import QCheckBox, QFileDialog, QHBoxLayout, QLabel, QLineEdit, QMessageBox, QWidget
 from src.loopWidget import LoopWidget
 from src.inputWidget import InputWidget
 
@@ -21,13 +21,26 @@ class Controller:
         self.ui.actionUnselect.triggered.connect(self.unselect_all)
         self.ui.actionSelect.triggered.connect(self.select_all)
         self.ui.genButton.clicked.connect(self.generate)
+        self.ui.changeTempDirButton.clicked.connect(self.change_temp_dir)
+        self.ui.changeOutDirButton.clicked.connect(self.change_out_dir)
+
+    def change_temp_dir(self):
+        self.clear()
+        self.temp_dir = str(QFileDialog.getExistingDirectory(self.ui.centralwidget, "Select templates folder"))
+        self.load_templates()
+        self.render()
+
+    def change_out_dir(self):
+        self.out_dir = str(QFileDialog.getExistingDirectory(self.ui.centralwidget, "Select output destination"))
+        self.ui.outDirLabel.setText(self.out_dir)
+        self.ui.outDirLabel.setToolTip(self.out_dir)
     
     def load_templates(self):
         self.templates = []
         templates = os.listdir(self.temp_dir)
 
         for temp in templates:
-            engine = TemplateEngine(self, temp)
+            engine = TemplateEngine(self, temp, self.temp_dir)
             self.templates.append(engine)
     
     def update_vars(self):
@@ -73,7 +86,10 @@ class Controller:
 
     def render(self):
         self.ui.tempDirLabel.setText(self.temp_dir)
+        self.ui.tempDirLabel.setToolTip(self.temp_dir)
         self.ui.outDirLabel.setText(self.out_dir)
+        self.ui.outDirLabel.setToolTip(self.out_dir)
+
         self.render_templates()
         self.render_inputs()
     

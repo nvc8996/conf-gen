@@ -2,7 +2,7 @@ import os
 import re
 
 VAR_PATTERN = '\$\{\w+;[a-zA-Z]+;[\w ]+\}\$'
-TEMP_DIR = "./templates/"
+TEMP_DIR = "./templates"
 OUT_DIR = "./configs"
 
 def place(data, line):
