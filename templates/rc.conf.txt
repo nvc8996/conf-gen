@@ -2,10 +2,10 @@
 
 hostname="ql"
 gateway_enable="YES"
-defaultrouter="${MY_GW}$"
+defaultrouter="${MY_GW;IP;Gate way}$"
 
-ifconfig_${NIC1}$="inet ${MY_IPWAN}$ netmask ${WAN_NETMASK}$"
-ifconfig_${NIC2}$="inet ${MY_IPLAN}$ netmask ${LAN_NETMASK}$"
+ifconfig_${NIC1;STR;WAN network card}$="inet ${MY_IPWAN;IP;WAN IP address}$ netmask ${WAN_NETMASK;IP;WAN netmask}$"
+ifconfig_${NIC2;STR;LAN network card}$="inet ${MY_IPLAN;IP;LAN IP address}$ netmask ${LAN_NETMASK;IP;LAN netmask}$"
 
 
 #########    FIREWALL Config   #########

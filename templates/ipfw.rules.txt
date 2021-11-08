@@ -3,9 +3,9 @@ IPF="ipfw -q add"
 ipfw -q -f flush
 
 ### Define
-MY_IPWAN="${MY_IPWAN}$";
-MY_IPLAN="${MY_IPLAN}$";
-MY_NET_1="${MY_NET_1}$";
+MY_IPWAN="${MY_IPWAN;IP;WAN IP address}$";
+MY_IPLAN="${MY_IPLAN;IP;LAN IP address}$";
+MY_NET_1="${MY_NET_1;IP;Network}$";
 
 ### loopback
 $IPF 10 allow all from any to any via lo0
