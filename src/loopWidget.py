@@ -16,7 +16,7 @@ class LoopWidget(QWidget):
         self.layout.setSpacing(0)
 
         self.label = QLabel(self.loop_part.name)
-        self.label.setStyleSheet('color: lightblue;')
+        self.label.setStyleSheet('color: blue;')
         self.layout.addWidget(self.label)
 
         self.part_widget = PartWidget(self.loop_part, data)
@@ -62,7 +62,7 @@ class PartWidget(QWidget):
         layout.setSpacing(0)
 
         label = QLabel(f'Data set number {self.count}:')
-        label.setStyleSheet('color: lightgreen;')
+        label.setStyleSheet('color: green;')
         layout.addWidget(label)
 
         data = {}

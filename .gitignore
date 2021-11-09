@@ -2,4 +2,5 @@ configs/
 venv/
 build
 dist
+win
 .DS_Store
