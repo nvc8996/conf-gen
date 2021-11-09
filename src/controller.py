@@ -25,18 +25,28 @@ class Controller:
         self.ui.changeOutDirButton.clicked.connect(self.change_out_dir)
 
     def change_temp_dir(self):
+        res = str(QFileDialog.getExistingDirectory(self.ui.centralwidget, "Select templates folder"))
+        if not res:
+            return
         self.clear()
-        self.temp_dir = str(QFileDialog.getExistingDirectory(self.ui.centralwidget, "Select templates folder"))
+        self.temp_dir = res
         self.load_templates()
         self.render()
 
     def change_out_dir(self):
-        self.out_dir = str(QFileDialog.getExistingDirectory(self.ui.centralwidget, "Select output destination"))
+        res = str(QFileDialog.getExistingDirectory(self.ui.centralwidget, "Select output destination"))
+        if not res:
+            return
+        self.out_dir = res
         self.ui.outDirLabel.setText(self.out_dir)
         self.ui.outDirLabel.setToolTip(self.out_dir)
     
     def load_templates(self):
         self.templates = []
+
+        if not os.path.exists(self.temp_dir):
+            return
+
         templates = os.listdir(self.temp_dir)
 
         for temp in templates:
@@ -55,6 +65,7 @@ class Controller:
     def render_templates(self):
         self.clear_templates()
         self.ui.verticalLayout.setAlignment(Qt.AlignTop)
+        self.ui.verticalLayout.setContentsMargins(25, 0, 0, 0)
 
         for temp in self.templates:
             temp.checkBox = QCheckBox(temp.name)

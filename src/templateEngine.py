@@ -77,6 +77,9 @@ class TemplateEngine:
         self.get_vars()
 
     def load(self, filename):
+        if not os.path.exists(self.temp_dir):
+            return
+        
         with open(os.path.join(self.temp_dir, filename), 'r') as f:
             self.lines = f.readlines()
 
