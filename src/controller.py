@@ -1,7 +1,7 @@
 import os
 from PyQt5.QtCore import Qt
 
-from PyQt5.QtWidgets import QCheckBox, QFileDialog, QHBoxLayout, QLabel, QLineEdit, QMessageBox, QWidget
+from PyQt5.QtWidgets import QCheckBox, QFileDialog, QMessageBox
 from src.loopWidget import LoopWidget
 from src.inputWidget import InputWidget
 
@@ -12,35 +12,24 @@ class Controller:
         self.ui = ui
         self.temp_dir = TEMP_DIR
         self.out_dir = OUT_DIR
+        self.data = {}
+
         self.load_templates()
         self.connect_ui()
         self.render()
     
     def connect_ui(self):
+        # Add handlers for menu options
         self.ui.actionReset.triggered.connect(self.reset)
         self.ui.actionUnselect.triggered.connect(self.unselect_all)
         self.ui.actionSelect.triggered.connect(self.select_all)
+        self.ui.actionAbout.triggered.connect(self.show_about)
+
+        # Add handlers for buttons
         self.ui.genButton.clicked.connect(self.generate)
         self.ui.changeTempDirButton.clicked.connect(self.change_temp_dir)
         self.ui.changeOutDirButton.clicked.connect(self.change_out_dir)
 
-    def change_temp_dir(self):
-        res = str(QFileDialog.getExistingDirectory(self.ui.centralwidget, "Select templates folder"))
-        if not res:
-            return
-        self.clear()
-        self.temp_dir = res
-        self.load_templates()
-        self.render()
-
-    def change_out_dir(self):
-        res = str(QFileDialog.getExistingDirectory(self.ui.centralwidget, "Select output destination"))
-        if not res:
-            return
-        self.out_dir = res
-        self.ui.outDirLabel.setText(self.out_dir)
-        self.ui.outDirLabel.setToolTip(self.out_dir)
-    
     def load_templates(self):
         self.templates = []
 
@@ -84,6 +73,7 @@ class Controller:
 
         target = self.ui.verticalLayout_2
         target.setAlignment(Qt.AlignTop)
+        target.setSpacing(0)
 
         for var in self.vars:
             self.data[var.name] = InputWidget(var)
@@ -92,7 +82,7 @@ class Controller:
         for temp in self.templates:
             if temp.enabled and temp.loop_count:
                 for part in temp.loops:
-                    widget = LoopWidget(part)
+                    widget = LoopWidget(part, temp.data)
                     target.addWidget(widget)
 
     def render(self):
@@ -132,14 +122,25 @@ class Controller:
         for i in range(self.ui.verticalLayout.count()):
             self.ui.verticalLayout.itemAt(i).widget().setChecked(True)
         
+    def show_about(self):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Icon.Information)
+        msg.setWindowTitle('Information')
+        msg.setText('Config files generator by NVC version 1.0')
+
+        msg.exec_()
+
     def generate(self):
         success = True
         try:
             for temp in self.templates:
+                temp.generate()
+            for temp in self.templates:
                 temp.export(self.out_dir)
-        except:
+        except Exception as e:
             success = False
-        
+            error = str(e)
+
         msg = QMessageBox()
 
         if success:
@@ -149,6 +150,25 @@ class Controller:
         else:
             msg.setIcon(QMessageBox.Icon.Warning)
             msg.setWindowTitle('Warning')
-            msg.setText(f'Unable to generate files to {self.out_dir}')
+            msg.setText(f'Failed.')
+            msg.setDetailedText(error)
 
         msg.exec_()
+    
+    def change_temp_dir(self):
+        res = str(QFileDialog.getExistingDirectory(self.ui.centralwidget, "Select templates folder"))
+        if not res:
+            return
+        self.clear()
+        self.temp_dir = res
+        self.load_templates()
+        self.render()
+
+    def change_out_dir(self):
+        res = str(QFileDialog.getExistingDirectory(self.ui.centralwidget, "Select output destination"))
+        if not res:
+            return
+        self.out_dir = res
+        self.ui.outDirLabel.setText(self.out_dir)
+        self.ui.outDirLabel.setToolTip(self.out_dir)
+    

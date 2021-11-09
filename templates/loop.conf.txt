@@ -1,6 +1,12 @@
+${NAME;WORD;Config name}$
 BEGIN_LOOP
 {
-    ${NVC;STR;Chuyen secret}$
-    ${HULA;STR;Lanh secret}$
+    ${NIC;WORD;Network card}$
+    ${IP;IP;IP address}$
+    {
+    BEGIN_LOOP
+        ${CNT;NUM;Secret number}$
+    END_LOOP
+    }
 }
 END_LOOP

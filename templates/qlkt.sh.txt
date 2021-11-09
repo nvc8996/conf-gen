@@ -1,11 +1,10 @@
 #####   TB Bao mat #####
-date ${MY_NTP;NUMBER;Time}$ // vi du202108200000.00 
+date ${MY_NTP;NUM;Time}$ // vi du202108200000.00 
 echo "########  SET IP ###########"
 sh /usr/local/etc/ipfw.rules 
 echo "########  RUN IPSEC ###########"
 sleep 1 
 /usr/local/etc/rc.d/strongswan start
-/usr/bin/swanctl –initiate --child ${CON_X;STR;Connection}$
+/usr/bin/swanctl –initiate --child ${CON_X;WORD;Connection}$
 echo ".........."
 echo "............................................ "
-# ${CON_X;STR;Connection}$ ${CON_X;STR;Connection}$ ${CON_X;STR;Connection}$
