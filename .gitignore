@@ -3,4 +3,5 @@ venv/
 build
 dist
 win
+win.zip
 .DS_Store
