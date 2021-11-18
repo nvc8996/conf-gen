@@ -25,9 +25,6 @@ class InputWidget(QWidget):
 
     # Init widget with custom content
     def init_widget(self):
-        # Set sizes
-        self.setMinimumHeight(45)
-
         # Create horizontal layout
         self.layout = QHBoxLayout(self)
 
@@ -40,7 +37,6 @@ class InputWidget(QWidget):
         if self.var.type.startswith('LIST_'):
             self.field = ListWidget(self.var.type, self)
         else:
-            self.setMaximumHeight(45)
             self.field = QLineEdit(self)
             if self.var.type in VALS.keys():
                 self.field.setValidator(VALS[self.var.type])
@@ -82,14 +78,14 @@ class ListWidget(QWidget):
         # Add button "Addition" - adding input
         addButton = QPushButton('+')
         addButton.setMaximumWidth(30)
-        addButton.setMaximumHeight(30)
+        addButton.setMinimumWidth(30)
         addButton.clicked.connect(self.add_input)
         layout.addWidget(addButton)
 
         # Add button "Substitution" - remove last input
         removeButton = QPushButton('-')
         removeButton.setMaximumWidth(30)
-        removeButton.setMaximumHeight(30)
+        removeButton.setMinimumWidth(30)
         removeButton.clicked.connect(self.remove_input)
         layout.addWidget(removeButton)
 
