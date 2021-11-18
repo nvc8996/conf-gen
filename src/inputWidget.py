@@ -47,6 +47,7 @@ class InputWidget(QWidget):
     def set_value(self):
         self.value = self.field.text()
 
+# Input Widget for list variable
 class ListWidget(QWidget):
     def __init__(self, type, master) -> None:
         QWidget.__init__(self)
@@ -65,9 +66,11 @@ class ListWidget(QWidget):
         self.layout = QVBoxLayout(self)
         self.layout.setSpacing(0)
 
+        # Create container widget for list of inputs
         self.container = QWidget()
         self.c_layout = QVBoxLayout(self.container)
 
+        # Add container widget to main widget
         self.layout.addWidget(self.container)
 
         # Add container for buttons
@@ -89,40 +92,57 @@ class ListWidget(QWidget):
         removeButton.clicked.connect(self.remove_input)
         layout.addWidget(removeButton)
 
+        # Add buttons to main widget
         self.layout.addWidget(buttons)
         
         self.add_input()
 
-        
+    
+    # Add new input to inputs list (increase the number of values)
     def add_input(self):
+        # Increase counter
         self.cnt += 1
+
+        # Widget for input
         line = QWidget()
         layout = QHBoxLayout(line)
 
+        # Label - index of input
         label = QLabel(str(self.cnt))
         label.setMaximumWidth(20)
         layout.addWidget(label)
 
+        # Input itself
         input = QLineEdit(self)
         if self.type in VALS.keys():
             input.setValidator(VALS[self.type])
         input.textEdited.connect(self.set_value)
         layout.addWidget(input)
 
+        #  Add line widget to container widget
         self.c_layout.addWidget(line)
+
+        # Save line and input widget for management
         self.input_lines.append(line)
         self.inputs.append(input)
 
+    # Delete input from inputs list (decrease the number of values)
     def remove_input(self):
+        # Do not remove if there's only one input
         if self.cnt < 2:
             return
         
+        # Remove widget
         self.input_lines[-1].deleteLater()
         
+        # Update management lists
         self.inputs.pop()
         self.input_lines.pop()
 
+        # Update counter
         self.cnt -= 1
+
+        # Update variable value
         self.set_value()
 
 
@@ -130,6 +150,7 @@ class ListWidget(QWidget):
     def set_value(self):
         self.master.set_value()
 
+    # Formulate value from inputs
     def text(self):
         text = ','.join([input.text() for input in self.inputs])
         return text
