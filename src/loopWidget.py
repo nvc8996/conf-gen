@@ -13,7 +13,7 @@ class LoopWidget(QWidget):
     def init_widget(self, data):
         # Init layout
         self.layout = QVBoxLayout(self)
-        self.layout.setContentsMargins(25, 0, 0, 0)
+        self.layout.setContentsMargins(20, 0, 0, 0)
         self.layout.setSpacing(0)
 
         # Add label for name of the loop
@@ -32,15 +32,17 @@ class LoopWidget(QWidget):
 
         # Add button "Addition" - adding sample part
         addButton = QPushButton('+')
-        addButton.setMaximumWidth(40)
+        addButton.setMaximumWidth(35)
+        addButton.setMaximumHeight(35)
         addButton.clicked.connect(self.part_widget.add_data_set)
         layout.addWidget(addButton)
 
         # Add button "Substitution" - remove last sample part
-        addButton = QPushButton('-')
-        addButton.setMaximumWidth(40)
-        addButton.clicked.connect(self.part_widget.pop_data_set)
-        layout.addWidget(addButton)
+        removeButton = QPushButton('-')
+        removeButton.setMaximumWidth(35)
+        removeButton.setMaximumHeight(35)
+        removeButton.clicked.connect(self.part_widget.pop_data_set)
+        layout.addWidget(removeButton)
 
         # Add buttons container to layout
         self.layout.addWidget(buttons)
@@ -62,7 +64,7 @@ class PartWidget(QWidget):
     # Init widget with vertical layout
     def init_widget(self):
         self.layout = QVBoxLayout(self)
-        self.layout.setContentsMargins(25, 0, 0, 0)
+        self.layout.setContentsMargins(20, 0, 0, 0)
 
     # Add inputs set for one sample
     def add_data_set(self):
@@ -71,7 +73,8 @@ class PartWidget(QWidget):
         # Create container for ONE sample inputs
         widget = QWidget()
         layout = QVBoxLayout(widget)
-        layout.setSpacing(0)
+
+        # layout.setSpacing(0)
 
         # Add label for inputs set
         label = QLabel(f'Data set number {self.count}:')

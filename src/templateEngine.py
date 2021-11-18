@@ -1,7 +1,7 @@
 import os
 import re
 
-VAR_PATTERN = '\$\{\w+;[a-zA-Z]+;[\w ]+\}\$'
+VAR_PATTERN = '\$\{\w+;[a-zA-Z_]+;[\w ]+\}\$'
 TEMP_DIR = "./templates"
 OUT_DIR = "./configs"
 
