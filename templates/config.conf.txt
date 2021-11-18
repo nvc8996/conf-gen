@@ -1,0 +1,8 @@
+var_1=${VAR_1;NUM;Variable 1}$
+var_2=${VAR_2;NUM;Variable 2}$
+
+BEGIN_LOOP
+{
+    loop_var=${LOOPVAR;NUM;Loop variable}$
+}
+END_LOOP
