@@ -3,6 +3,8 @@ var_2=${VAR_2;NUM;Variable 2}$
 
 BEGIN_LOOP
 {
+    env_var_1=${VAR_1;NUM;Variable 1}$
+    env_var_2=${VAR_2;NUM;Variable 2}$
     loop_var=${LOOPVAR;NUM;Loop variable}$
     list_var=${NICS;LIST_WORD;Network cards}$
     loop_var2=${LOOPVAR_2;NUM;Loop variable 2}$

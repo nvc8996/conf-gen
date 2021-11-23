@@ -6,21 +6,26 @@ TEMP_DIR = "./templates"
 OUT_DIR = "./configs"
 
 # Function to place user's input data into template's line
-def place(data, line):
+def place(template_data, data, line):
     # Get all variables in line
     vars = re.findall(VAR_PATTERN, line)
 
     # Go through all variables
-    for var in vars:
+    for var_str in vars:
         # Get value of input data
-        value = data[Variable(var).name].value
+        var = Variable(var_str)
+        value = ""
+        if var.name in data.keys():
+            value = data[var.name].value
+        elif var.name in template_data.keys():
+            value = template_data[var.name].value
 
         # Raise exception if no value
         if value == "":
             raise Exception("Not all fields are filled!!!")
 
         # Place value into line
-        line = line.replace(var, value)
+        line = line.replace(var_str, value)
 
     return line
 
@@ -51,7 +56,7 @@ class Variable:
 # Class for handling Loop part in template
 class LoopPart:
     # Continuously init loop from template's lines from starting line with index 'pos' and loop's name 'name'
-    def __init__(self, lines, pos, name):
+    def __init__(self, lines, pos, name, template_vars):
         # Init variables
         self.name = name
         self.structure = []
@@ -61,13 +66,13 @@ class LoopPart:
         self.end_pos = pos
 
         # Load loop part
-        self.get_vars(lines, pos)
+        self.get_vars(lines, pos, template_vars)
     
     def get_end_pos(self):
         return self.end_pos
     
     # Load loop's content: variables, sub-loops 
-    def get_vars(self, lines, pos):
+    def get_vars(self, lines, pos, template_vars):
         i = pos
         while i < len(lines):
             line = lines[i]
@@ -77,7 +82,7 @@ class LoopPart:
                 self.loop_count += 1
 
                 # Load sub-loop and add to loop's structure
-                self.structure.append(LoopPart(lines, i + 1, f'{self.name}-{self.loop_count}'))
+                self.structure.append(LoopPart(lines, i + 1, f'{self.name}-{self.loop_count}', template_vars))
                 self.loops.append(self.structure[-1])
                 i = self.loops[-1].get_end_pos() + 1
                 continue
@@ -92,26 +97,29 @@ class LoopPart:
             for x in re.findall(VAR_PATTERN, line):
                 tmp = Variable(x)
 
+                if tmp in template_vars:
+                    continue
+
                 # Add only new variables
                 if tmp not in self.vars:
                     self.vars.append(tmp)
             i += 1
 
     # Generate one sample of the loop
-    def generate_one(self, data):
+    def generate_one(self, data, template_data):
         result = []
         for line in self.structure:
             if type(line) is str:
-                result.append(place(data, line))
+                result.append(place(template_data, data, line))
             else:
                 result += line.generate(data[line.name])
         return result
     
     # Generate loop based on input dataset
-    def generate(self, dataset):
+    def generate(self, dataset, template_data):
         result = []
         for data in dataset:
-            result += self.generate_one(data)
+            result += self.generate_one(data, template_data)
         return result
 
 # Class for template handling
@@ -168,7 +176,7 @@ class TemplateEngine:
                 self.loop_count += 1
                 
                 # Load loop and add to template's structure
-                self.structure.append(LoopPart(self.lines, i + 1, f'{self.name}-{self.loop_count}'))
+                self.structure.append(LoopPart(self.lines, i + 1, f'{self.name}-{self.loop_count}', self.vars))
                 self.loops.append(self.structure[-1])
                 i = self.loops[-1].get_end_pos() + 1
                 continue
@@ -201,11 +209,11 @@ class TemplateEngine:
         for line in self.structure:
             # place data if is normal line
             if type(line) is str:
-                self.result.append(place(data, line))
+                self.result.append(place(data, data, line))
 
             # Generate loop samples if is loop part
             else:
-                self.result += line.generate(self.data[line.name])
+                self.result += line.generate(self.data[line.name], data)
     
     # Generate configuration file
     def export(self, out_dir=OUT_DIR):
