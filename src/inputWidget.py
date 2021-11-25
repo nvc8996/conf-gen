@@ -1,7 +1,7 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtCore import QRegExp
 from PyQt5.QtGui import QRegExpValidator
-from PyQt5.QtWidgets import QPushButton, QWidget, QHBoxLayout, QLabel, QLineEdit, QVBoxLayout
+from PyQt5.QtWidgets import QComboBox, QPushButton, QWidget, QHBoxLayout, QLabel, QLineEdit, QVBoxLayout
 
 # Type's value validators
 VALS = {
@@ -36,6 +36,9 @@ class InputWidget(QWidget):
         # Add input field to layout
         if self.var.type.startswith('LIST_'):
             self.field = ListWidget(self.var.type, self)
+        elif self.var.type.upper().startswith('OPTION_'):
+            self.field = OptionWidget(self.var.type, self)
+            self.set_value()
         else:
             self.field = QLineEdit(self)
             if self.var.type in VALS.keys():
@@ -154,3 +157,29 @@ class ListWidget(QWidget):
     def text(self):
         text = ','.join([input.text() for input in self.inputs])
         return text
+
+# Custom combobox widget
+class OptionWidget(QComboBox):
+    def __init__(self, type, master) -> None:
+        QWidget.__init__(self)
+        self.master = master
+        self.init_options(type)
+    
+    # Init options from type variable
+    def init_options(self, type):
+        # Get all options
+        options = type.split('_')[1:]
+
+        # Add options to combobox
+        self.addItems(options)
+
+        # Set handler
+        self.activated.connect(self.set_value)
+    
+    # Update selected value
+    def set_value(self):
+        self.master.set_value()
+
+    # Return selected value
+    def text(self):
+        return self.currentText()

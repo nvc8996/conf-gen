@@ -1,5 +1,6 @@
 var_1=${VAR_1;NUM;Variable 1}$
 var_2=${VAR_2;NUM;Variable 2}$
+var_3=${VAR_3;option_yes_no; Auto start up}$
 
 BEGIN_LOOP
 {

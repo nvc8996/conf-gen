@@ -39,7 +39,7 @@ class Variable:
         # Extract information
         self.name, self.type, self.desc = [s.strip() for s in inp.split(';')]
         self.name = self.name.upper()
-        self.type = self.type.upper()
+        # self.type = self.type.upper()
 
     def __str__(self):
         return self.name + ' - ' + self.type
